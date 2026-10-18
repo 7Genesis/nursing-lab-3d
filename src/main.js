@@ -147,13 +147,14 @@ const xLayerNames = { ossos: 'Ossos', musculos: 'Músculos', orgaos: 'Órgãos',
 let xLayer = 'ossos', xItems = [], xIndex = -1;
 const norm = (t) => (t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const labelOf = (m) => describe(m.userData.en, m.userData.side, m.userData.pt, m.userData.latin).label;
-function xBuild() {
+function xBuild(auto) {
   const q = norm($('x-search').value);
   xItems = pickable.filter((m) => m.userData.layer === xLayer && m.userData.en && (!q || norm(`${labelOf(m)} ${m.userData.latin} ${m.userData.en}`).includes(q)));
   const list = $('x-list');
   list.replaceChildren(...xItems.map((m, i) => new Option(labelOf(m), String(i))));
   $('x-count').textContent = `${xItems.length} peça(s) em ${xLayerNames[xLayer]}. Escolha na lista ou use Anterior e Próxima.`;
   xIndex = -1;
+  if (auto && xItems.length) xStep(0); // ao trocar de sistema ou buscar, já mostra a primeira peça isolada
 }
 function xStep(i) {
   if (!xItems.length) return;
@@ -177,10 +178,10 @@ function showCard(s) {
 for (const [k, label] of Object.entries(xLayerNames)) {
   const b = document.createElement('button');
   b.textContent = label; b.dataset.l = k; b.setAttribute('aria-pressed', String(k === xLayer));
-  b.onclick = () => { xLayer = k; for (const o of $('x-layers').children) o.setAttribute('aria-pressed', String(o === b)); xBuild(); };
+  b.onclick = () => { xLayer = k; for (const o of $('x-layers').children) o.setAttribute('aria-pressed', String(o === b)); xBuild(true); };
   $('x-layers').append(b);
 }
-$('x-search').oninput = xBuild;
+$('x-search').oninput = () => xBuild(true);
 $('x-list').onchange = (e) => xStep(Number(e.target.value));
 $('x-prev').onclick = () => xStep(xIndex < 0 ? xItems.length - 1 : xIndex - 1);
 $('x-next').onclick = () => xStep(xIndex + 1);
