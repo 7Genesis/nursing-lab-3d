@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nursing Lab 3D — laboratório virtual de enfermagem</title>
+<meta name="description" content="Anatomia 3D interativa e monitor de sinais vitais simulado para estudo de enfermagem. Conteúdo didático com dados fictícios.">
+  <script type="module" crossorigin src="./assets/index-GEmLpm5i.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BfTWKXvk.css">
+</head>
+<body>
+<header class="top">
+  <button class="brand" id="brand" title="Sobre o projeto e meus projetos 3D">Nursing Lab <span>3D</span></button>
+  <nav aria-label="Seções" role="tablist">
+    <button role="tab" id="tab-anatomia" aria-selected="true" data-tab="anatomia">Anatomia</button>
+    <button role="tab" aria-selected="false" data-tab="ausculta">Ausculta</button>
+    <button role="tab" aria-selected="false" data-tab="pa">Pressão arterial</button>
+    <button role="tab" aria-selected="false" data-tab="quiz">Avaliações</button>
+    <button role="tab" aria-selected="false" data-tab="casos">Casos</button>
+    <button role="tab" id="tab-tela" aria-selected="false" data-tab="tela">Tela (monitor)</button>
+  </nav>
+</header>
+
+<canvas id="gl" aria-label="Paciente virtual 3D didático. Use o mouse, o toque ou as listas para explorar." tabindex="0"></canvas>
+<section id="intro" class="intro" role="dialog" aria-modal="true" aria-labelledby="intro-title" hidden>
+  <div class="intro-card">
+    <h1 id="intro-title">Nursing Lab <span>3D</span></h1>
+    <p>Laboratório virtual de enfermagem no navegador: explore o corpo humano em 3D, treine ausculta e aferição de pressão, acompanhe um monitor de sinais vitais e resolva casos clínicos.</p>
+    <p class="notice" role="note"><strong>Informativo:</strong> conteúdo didático com dados fictícios. Não substitui treinamento supervisionado, protocolo da instituição nem revisão profissional. Os sons são sintéticos e o modelo anatômico é representativo, sem validação clínica.</p>
+    <div class="tiles" id="intro-tiles">
+      <button data-go="anatomia"><b>Anatomia</b><span>Mais de 450 músculos, ossos e órgãos. Isole e veja peça por peça.</span></button>
+      <button data-go="ausculta"><b>Ausculta</b><span>Pontos cardíacos e pulmonares, com sons simulados e treino.</span></button>
+      <button data-go="pa"><b>Pressão arterial</b><span>Braçadeira, manômetro e sons de Korotkoff.</span></button>
+      <button data-go="tela"><b>Tela (monitor)</b><span>ECG, SpO2, PA e cenários clínicos ao vivo.</span></button>
+      <button data-go="quiz"><b>Avaliações</b><span>Quiz com identificação no corpo 3D.</span></button>
+      <button data-go="casos"><b>Casos clínicos</b><span>Priorize, escolha a ação e revise.</span></button>
+    </div>
+    <h2>Meus projetos 3D</h2>
+    <div class="projects">
+      <a href="https://7genesis.github.io/portfolio-3d-macbook/" target="_blank" rel="noreferrer"><b>Portfólio 3D — MacBook desmontável</b><span>Um MacBook que se desmonta na rolagem e mostra meus projetos.</span></a>
+      <a href="https://github.com/7Genesis/nursing-lab-3d" target="_blank" rel="noreferrer"><b>Nursing Lab 3D (este projeto)</b><span>Código no GitHub, com a atribuição dos modelos.</span></a>
+      <a href="https://portfolio-genesis-one.vercel.app" target="_blank" rel="noreferrer"><b>Portfólio de Genesis Melo</b><span>Todos os projetos e contato.</span></a>
+    </div>
+    <button id="intro-start" class="cta">Começar</button>
+  </div>
+</section>
+<div id="loading" class="loading">Carregando cena 3D…</div>
+<div id="fail" class="fail" hidden>Não foi possível iniciar o WebGL neste navegador. Tente outro navegador ou ative a aceleração de hardware.</div>
+
+<aside class="side" id="side">
+  <div class="side-head">
+    <strong id="side-title">Anatomia</strong>
+    <button id="side-toggle" aria-expanded="true" aria-controls="side-body">Minimizar</button>
+  </div>
+  <div id="side-body" aria-live="polite">
+  <section data-panel="anatomia">
+    <h2 id="s-nome">Selecione uma estrutura</h2>
+    <p class="latim" id="s-latim">Clique no corpo ou escolha na lista.</p>
+    <dl id="s-info" hidden>
+      <dt>Sistema</dt><dd id="s-sis"></dd>
+      <dt>Função</dt><dd id="s-fun"></dd>
+      <dt>Na enfermagem</dt><dd id="s-enf"></dd>
+      <dt>Riscos e cuidados</dt><dd id="s-ris"></dd>
+      <dt>Fontes</dt><dd id="s-src"></dd>
+    </dl>
+    <button id="s-focus" hidden>Aproximar</button>
+    <label class="lbl" for="s-list">Lista de estruturas</label>
+    <select id="s-list"></select>
+    <h3>Isolar e explorar</h3>
+    <div class="grp" id="x-layers" role="group" aria-label="Sistema"></div>
+    <label class="lbl" for="x-search">Buscar peça (nome em português, latim ou inglês)</label>
+    <input id="x-search" type="search" placeholder="ex.: fêmur, deltoide, ventrículo">
+    <select id="x-list" size="8" aria-label="Peças do sistema"></select>
+    <div class="grp">
+      <button id="x-prev">Anterior</button><button id="x-next">Próxima</button>
+      <button id="x-group">Isolar grupo</button><button id="x-all">Mostrar tudo</button>
+    </div>
+    <p id="x-count" class="note" role="status"></p>
+    <p id="atlas-status" class="note" role="status"></p>
+    <p class="note">Peças do atlas BodyParts3D (reconstruções anatômicas), sem textura de tecido. Algumas peças são conjuntos regionais. Revisão profissional: pendente.</p>
+    <p class="src">Modelo: BodyParts3D, © The Database Center for Life Science, licença CC BY-SA 2.1 Japão. Os GLBs derivados seguem a mesma licença.</p>
+  </section>
+
+  <section data-panel="tela" hidden>
+    <h2>Monitor multiparamétrico</h2>
+    <p class="latim">Valores e traçados simulados, de paciente fictício.</p>
+    <div class="grp" id="m-scen" role="group" aria-label="Cenário clínico"></div>
+    <div class="row">
+      <button id="m-freeze" aria-pressed="false">Congelar</button>
+      <button id="m-alarm" aria-pressed="true">Alarmes ligados</button>
+    </div>
+    <label class="lbl" for="m-speed">Velocidade de varredura</label>
+    <select id="m-speed"><option value="0.5">0,5x</option><option value="1" selected>1x</option><option value="2">2x</option></select>
+    <label class="lbl" for="m-pain">Escala de dor (0–10): <output id="m-pain-out">0</output></label>
+    <input id="m-pain" type="range" min="0" max="10" step="1" value="0">
+    <p class="note">Você também pode tocar nas teclas de cenário na própria tela do monitor, no 3D. Os limites de alarme são didáticos (adulto); siga o protocolo da instituição.</p>
+  </section>
+  <section data-panel="ausculta" hidden></section>
+  <section data-panel="pa" hidden></section>
+  <section data-panel="quiz" hidden></section>
+  <section data-panel="casos" hidden></section>
+  </div>
+</aside>
+
+<footer class="bottom">
+  <div class="grp" id="b-views" role="group" aria-label="Vistas">
+    <button data-view="anterior">Anterior</button><button data-view="posterior">Posterior</button><button data-view="lateral">Lateral</button>
+  </div>
+  <div class="grp" id="b-layers" role="group" aria-label="Camadas"></div>
+  <label class="op">Pele <input id="b-op" type="range" min="0" max="100" value="35" aria-label="Opacidade da pele"></label>
+</footer>
+</body>
+</html>
