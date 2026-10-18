@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nursing Lab 3D — laboratório virtual de enfermagem</title>
+<meta name="description" content="Anatomia 3D interativa e monitor de sinais vitais simulado para estudo de enfermagem. Conteúdo didático com dados fictícios.">
+</head>
+<body>
+<header class="top">
+  <strong class="brand">Nursing Lab <span>3D</span></strong>
+  <nav aria-label="Seções" role="tablist">
+    <button role="tab" id="tab-anatomia" aria-selected="true" data-tab="anatomia">Anatomia</button>
+    <button role="tab" id="tab-tela" aria-selected="false" data-tab="tela">Tela (monitor)</button>
+  </nav>
+</header>
+
+<canvas id="gl" aria-label="Paciente virtual 3D didático. Use o mouse, o toque ou as listas para explorar." tabindex="0"></canvas>
+<div id="loading" class="loading">Carregando cena 3D…</div>
+<div id="fail" class="fail" hidden>Não foi possível iniciar o WebGL neste navegador. Tente outro navegador ou ative a aceleração de hardware.</div>
+
+<aside class="side" id="side" aria-live="polite">
+  <section data-panel="anatomia">
+    <h2 id="s-nome">Selecione uma estrutura</h2>
+    <p class="latim" id="s-latim">Clique no corpo ou escolha na lista.</p>
+    <dl id="s-info" hidden>
+      <dt>Sistema</dt><dd id="s-sis"></dd>
+      <dt>Função</dt><dd id="s-fun"></dd>
+      <dt>Na enfermagem</dt><dd id="s-enf"></dd>
+      <dt>Riscos e cuidados</dt><dd id="s-ris"></dd>
+      <dt>Fontes</dt><dd id="s-src"></dd>
+    </dl>
+    <button id="s-focus" hidden>Aproximar</button>
+    <label class="lbl" for="s-list">Lista de estruturas</label>
+    <select id="s-list"></select>
+    <p class="note">Modelo didático feito de formas simples, não é um modelo clínico validado. Revisão profissional: pendente.</p>
+  </section>
+
+  <section data-panel="tela" hidden>
+    <h2>Monitor multiparamétrico</h2>
+    <p class="latim">Valores e traçados simulados, de paciente fictício.</p>
+    <div class="grp" id="m-scen" role="group" aria-label="Cenário clínico"></div>
+    <div class="row">
+      <button id="m-freeze" aria-pressed="false">Congelar</button>
+      <button id="m-alarm" aria-pressed="true">Alarmes ligados</button>
+    </div>
+    <label class="lbl" for="m-speed">Velocidade de varredura</label>
+    <select id="m-speed"><option value="0.5">0,5x</option><option value="1" selected>1x</option><option value="2">2x</option></select>
+    <label class="lbl" for="m-pain">Escala de dor (0–10): <output id="m-pain-out">0</output></label>
+    <input id="m-pain" type="range" min="0" max="10" step="1" value="0">
+    <p class="note">Você também pode tocar nas teclas de cenário na própria tela do monitor, no 3D. Os limites de alarme são didáticos (adulto); siga o protocolo da instituição.</p>
+  </section>
+</aside>
+
+<footer class="bottom">
+  <div class="grp" id="b-views" role="group" aria-label="Vistas">
+    <button data-view="anterior">Anterior</button><button data-view="posterior">Posterior</button><button data-view="lateral">Lateral</button>
+  </div>
+  <div class="grp" id="b-layers" role="group" aria-label="Camadas"></div>
+  <label class="op">Pele <input id="b-op" type="range" min="0" max="100" value="35" aria-label="Opacidade da pele"></label>
+</footer>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
