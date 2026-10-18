@@ -28,7 +28,7 @@ export function mountQuiz(ctx, el) {
   const sel = (opts, key) => h('select', { onchange: (e) => { cfg[key] = key === 'lvl' ? Number(e.target.value) : e.target.value; } }, opts.map(([v, t]) => h('option', { value: v }, t)));
   const start = () => {
     const mc = shuffle(QUESTIONS.filter((q) => !cfg.lvl || q.lvl === cfg.lvl)).map((q) => ({ t: 'mc', q }));
-    const ids = Object.keys(STRUCTURES).filter((k) => STRUCTURES[k].s !== 'Tegumentar');
+    const ids = Object.keys(STRUCTURES).filter((k) => STRUCTURES[k].s !== 'Tegumentar' && ctx.has(k));
     const id3 = shuffle(ids).map((id) => ({ t: 'id', id }));
     let items = cfg.mode === 'mc' ? mc : cfg.mode === 'id' ? id3 : shuffle([...mc.slice(0, 6), ...id3.slice(0, 4)]);
     items = items.slice(0, 10);

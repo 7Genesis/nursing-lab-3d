@@ -18,10 +18,17 @@ export function classify(s, d) {
 
 export function mountPressao(ctx, el) {
   // braçadeira no braço direito do paciente (x negativo)
-  const A = new THREE.Vector3(-0.2, 1.4, 0), B = new THREE.Vector3(-0.27, 1.13, 0);
   const cuff = new THREE.Mesh(new THREE.CylinderGeometry(0.058, 0.058, 0.1, 24, 1, true), new THREE.MeshStandardMaterial({ color: 0x2f6fb5, side: THREE.DoubleSide, roughness: 0.8 }));
-  cuff.position.copy(A).lerp(B, 0.55);
-  cuff.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), B.clone().sub(A).normalize());
+  let center = new THREE.Vector3(-0.235, 1.28, 0);
+  // eixo do braço direito: úmero real do atlas, quando carregado
+  const placeCuff = () => {
+    const ax = ctx.armAxis() || { a: new THREE.Vector3(-0.2, 1.4, 0), b: new THREE.Vector3(-0.27, 1.13, 0) };
+    center = ax.a.clone().lerp(ax.b, 0.5);
+    cuff.position.copy(ax.a).lerp(ax.b, 0.5);
+    cuff.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), ax.b.clone().sub(ax.a).normalize());
+  };
+  placeCuff();
+  ctx.onAtlas(placeCuff);
   cuff.visible = false;
   ctx.scene.add(cuff);
 
@@ -125,7 +132,7 @@ export function mountPressao(ctx, el) {
   });
 
   return {
-    enter() { active = true; cuff.visible = true; reset(); ctx.fly([-0.85, 1.3, 1.25], [-0.22, 1.25, 0]); },
+    enter() { active = true; cuff.visible = true; reset(); placeCuff(); ctx.fly([center.x - 0.8, center.y + 0.05, center.z + 1.3], center.toArray()); },
     leave() { active = false; cuff.visible = false; },
   };
 }

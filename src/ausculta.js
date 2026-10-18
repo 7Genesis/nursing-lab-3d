@@ -13,14 +13,20 @@ export function mountAusculta(ctx, el) {
   group.visible = false;
   ctx.scene.add(group);
   const marks = {};
+  const place = () => {
+    for (const p of AUSC_POINTS) {
+      const q = ctx.skinPoint(p.pos[0], p.pos[1], !!p.back);
+      marks[p.id].position.copy(q || new THREE.Vector3(p.pos[0], p.pos[1], (surf(p.pos[0], p.pos[1]) + 0.008) * (p.back ? -1 : 1)));
+    }
+  };
   for (const p of AUSC_POINTS) {
-    const z = (surf(p.pos[0], p.pos[1]) + 0.008) * (p.back ? -1 : 1);
     const m = new THREE.Mesh(new THREE.SphereGeometry(0.014, 16, 12), new THREE.MeshBasicMaterial({ color: p.tipo === 'cardiaco' ? 0xff6b6b : 0x4dd0e1 }));
-    m.position.set(p.pos[0], p.pos[1], z);
     group.add(m);
     marks[p.id] = m;
     ctx.clickables.set(m, () => choose(p.id));
   }
+  place();
+  ctx.onAtlas(place);
 
   let mode = 'explorar', sel = null, q = null;
   const heartF = { v: 'normal' }, lungF = { v: 'mv' };

@@ -16,10 +16,24 @@ Laboratório virtual de enfermagem no navegador: anatomia 3D interativa e um mon
 
 ## Limitações
 
-- O corpo é feito de formas simples, não é um modelo clínico validado. Para usar um GLB anatômico, carregue-o em `src/main.js` e mapeie os nomes das malhas para os ids de `src/data.js`.
+- O corpo é um atlas anatômico representativo (Z-Anatomy e BodyParts3D), sem textura de tecido e sem validação clínica. Peças sem ficha detalhada mostram só o nome (TA2) e a localização. Faltam peças: nervos periféricos (isquiático, axilar, mediano), artérias e veias além das principais, e a pele é um envoltório simples.
+- Se o atlas não carregar, o app mostra o corpo de formas simples (`src/body.js`) como reserva.
 - Os limites do monitor (FC 60–100, FR 12–20, SpO2 ≥ 95%, PAS ≥ 90, temperatura < 37,8 °C) são didáticos, para adulto.
 - Ainda não implementados: injeção intramuscular, acesso venoso, lesão por pressão, módulo de segurança do paciente, cortes e vista explodida.
 - Os sons são sintéticos. O deslocamento numérico dos erros de PA (mmHg) é ilustrativo; a literatura dá o sentido do erro. Casos e questões são didáticos e aguardam revisão profissional.
+
+## Modelos 3D e licença
+
+Os GLBs em `public/models/` são derivados de **Z-Anatomy (CC BY-SA 4.0)** e **BodyParts3D (CC BY-SA 2.1 Japão)**, então seguem CC BY-SA. Atribuição completa em `public/models/ATTRIBUTION.md`. O código do app (`src/`, `scripts/`) é separado dos modelos.
+
+Para refazer os GLBs (os dados de origem ficam fora do repositório):
+
+```bash
+# 1) Blender (5.x) exporta as malhas do Z-Anatomy (Startup.blend do template)
+blender -b Startup.blend --python scripts/zanatomy-dump.py -- dump/
+# 2) converte, simplifica e comprime
+node scripts/build-models.mjs --za dump --bp <pasta-bodyparts3d> --ta TA2.csv
+```
 
 ## Rodar
 

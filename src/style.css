@@ -51,3 +51,7 @@ button.wrong{background:#5a2020;border-color:#ff6b6b}
 .side ul{margin:6px 0;padding-left:18px}
 .side label.lbl input[type=checkbox]{width:auto;margin-right:6px}
 @media(max-width:760px){.side.wide{width:auto}}
+
+.side h3{margin:16px 0 6px;font-size:14px;color:var(--acc);text-transform:uppercase;letter-spacing:.06em}
+#x-search{width:100%;background:#0f1a22;border:1px solid var(--line);border-radius:8px;padding:6px;margin-bottom:6px}
+#x-list{height:auto;margin-bottom:8px}

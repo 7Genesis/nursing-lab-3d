@@ -37,7 +37,19 @@
     <button id="s-focus" hidden>Aproximar</button>
     <label class="lbl" for="s-list">Lista de estruturas</label>
     <select id="s-list"></select>
-    <p class="note">Modelo didático feito de formas simples, não é um modelo clínico validado. Revisão profissional: pendente.</p>
+    <h3>Isolar e explorar</h3>
+    <div class="grp" id="x-layers" role="group" aria-label="Sistema"></div>
+    <label class="lbl" for="x-search">Buscar peça (nome em português, latim ou inglês)</label>
+    <input id="x-search" type="search" placeholder="ex.: fêmur, deltoide, ventrículo">
+    <select id="x-list" size="8" aria-label="Peças do sistema"></select>
+    <div class="grp">
+      <button id="x-prev">Anterior</button><button id="x-next">Próxima</button>
+      <button id="x-group">Isolar grupo</button><button id="x-all">Mostrar tudo</button>
+    </div>
+    <p id="x-count" class="note" role="status"></p>
+    <p id="atlas-status" class="note" role="status"></p>
+    <p class="note">Peças do atlas BodyParts3D (reconstruções anatômicas), sem textura de tecido. Algumas peças são conjuntos regionais. Revisão profissional: pendente.</p>
+    <p class="src">Modelo: BodyParts3D, © The Database Center for Life Science, licença CC BY-SA 2.1 Japão. Os GLBs derivados seguem a mesma licença.</p>
   </section>
 
   <section data-panel="tela" hidden>
