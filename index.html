@@ -45,7 +45,12 @@
 <div id="loading" class="loading">Carregando cena 3D…</div>
 <div id="fail" class="fail" hidden>Não foi possível iniciar o WebGL neste navegador. Tente outro navegador ou ative a aceleração de hardware.</div>
 
-<aside class="side" id="side" aria-live="polite">
+<aside class="side" id="side">
+  <div class="side-head">
+    <strong id="side-title">Anatomia</strong>
+    <button id="side-toggle" aria-expanded="true" aria-controls="side-body">Minimizar</button>
+  </div>
+  <div id="side-body" aria-live="polite">
   <section data-panel="anatomia">
     <h2 id="s-nome">Selecione uma estrutura</h2>
     <p class="latim" id="s-latim">Clique no corpo ou escolha na lista.</p>
@@ -92,6 +97,7 @@
   <section data-panel="pa" hidden></section>
   <section data-panel="quiz" hidden></section>
   <section data-panel="casos" hidden></section>
+  </div>
 </aside>
 
 <footer class="bottom">

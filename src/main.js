@@ -117,6 +117,7 @@ function select(id, focus) {
   const s = id && infoFor(id);
   $('s-info').hidden = $('s-focus').hidden = !s;
   $('s-nome').textContent = s ? s.n : 'Selecione uma estrutura';
+  setSideTitle(s ? s.n : 'Anatomia');
   $('s-latim').textContent = s ? (s.generic ? `${s.l}${s.en ? ` · ${s.en}` : ''} · Terminologia Anatomica` : `${s.l} · Terminologia Anatomica`) : 'Clique no corpo ou escolha na lista.';
   if (!s) return;
   $('s-sis').textContent = s.s; $('s-fun').textContent = s.f; $('s-enf').textContent = s.e; $('s-ris').textContent = s.r;
@@ -169,6 +170,7 @@ function xStep(i) {
   $('x-count').textContent = `${xIndex + 1} de ${xItems.length}: ${labelOf(m)}`;
 }
 function showCard(s) {
+  setSideTitle(s.n);
   $('s-info').hidden = $('s-focus').hidden = false;
   $('s-nome').textContent = s.n;
   $('s-latim').textContent = `${s.l}${s.en ? ` · ${s.en}` : ''} · Terminologia Anatomica`;
@@ -220,6 +222,8 @@ function tab(name) {
   current = name;
   for (const b of document.querySelectorAll('[role=tab]')) b.setAttribute('aria-selected', String(b.dataset.tab === name));
   for (const p of document.querySelectorAll('[data-panel]')) p.hidden = p.dataset.panel !== name;
+  setSideTitle(document.querySelector(`[role=tab][data-tab=${name}]`)?.textContent || 'Painel');
+  if (phone.matches) setMin(name === 'anatomia' || name === 'tela'); // quiz, casos, PA e ausculta precisam do painel aberto
   $('side').classList.toggle('wide', ['pa', 'quiz', 'casos'].includes(name));
   if (mods[name]) mods[name].enter(); else view(name === 'tela' ? 'tela' : 'anterior');
 }
@@ -246,6 +250,18 @@ function armAxis() {
 const mctx = { scene, layers, fly, view, zoomTo, highlight, setLayer, monitor, clickables, goTab: tab, onFrame: (fn) => frameFns.add(fn), has, skinPoint, armAxis, onAtlas: (fn) => atlasFns.add(fn) };
 const mount = (name, fn) => { mods[name] = fn(mctx, document.querySelector(`[data-panel=${name}]`)); };
 mount('ausculta', mountAusculta); mount('pa', mountPressao); mount('quiz', mountQuiz); mount('casos', mountCases);
+
+// painel lateral: dá para minimizar (útil no celular, onde ele cobre o corpo 3D)
+const side = $('side'), sideToggle = $('side-toggle');
+const phone = matchMedia('(max-width: 760px)');
+function setMin(min) {
+  side.classList.toggle('min', min);
+  sideToggle.setAttribute('aria-expanded', String(!min));
+  sideToggle.textContent = min ? 'Mostrar painel' : 'Minimizar';
+}
+sideToggle.onclick = () => setMin(!side.classList.contains('min'));
+if (phone.matches) setMin(true); // no celular o painel cobriria o corpo: começa minimizado
+const setSideTitle = (t) => { $('side-title').textContent = t; };
 
 // tela de abertura: informativo e atalhos (uma vez por sessão)
 const intro = $('intro');

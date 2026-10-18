@@ -67,3 +67,9 @@ button.wrong{background:#5a2020;border-color:#ff6b6b}
 .tiles button:hover,.projects a:hover{border-color:var(--acc)}
 .tiles span,.projects span{font-size:13px;color:var(--mut)}
 .cta{margin-top:18px;background:#16543d;border-color:var(--acc);padding:10px 24px;font-weight:600}
+
+.side-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 10px;position:sticky;top:-16px;z-index:1;padding:4px 0;background:#121a22}
+.side-head strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.side.min{max-height:none;overflow:visible;padding:8px 12px}
+.side.min .side-head{margin:0;position:static}
+.side.min #side-body{display:none}
