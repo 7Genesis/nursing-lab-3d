@@ -250,7 +250,8 @@ mount('ausculta', mountAusculta); mount('pa', mountPressao); mount('quiz', mount
 // tela de abertura: informativo e atalhos (uma vez por sessão)
 const intro = $('intro');
 const closeIntro = () => { intro.hidden = true; try { sessionStorage.setItem('nl3d.intro', '1'); } catch { /* sem armazenamento */ } canvas.focus(); };
-try { if (!sessionStorage.getItem('nl3d.intro')) intro.hidden = false; } catch { intro.hidden = false; }
+const qs = new URLSearchParams(location.search); // ?intro=0 pula a abertura; ?pele=0 começa sem a pele (útil para capturas e links diretos)
+try { if (qs.get('intro') !== '0' && !sessionStorage.getItem('nl3d.intro')) intro.hidden = false; } catch { intro.hidden = qs.get('intro') === '0'; }
 if (!intro.hidden) $('intro-start').focus();
 $('intro-start').onclick = closeIntro;
 $('intro-tiles').onclick = (e) => { const b = e.target.closest('[data-go]'); if (b) { closeIntro(); tab(b.dataset.go); } };
@@ -265,6 +266,7 @@ loadAtlas({ layers, pickable, onStatus: (t) => { status.textContent = t; } })
     if (st) { const b = new THREE.Box3().setFromObject(st); chest = { bot: b.min.y, top: b.max.y }; }
     atlasFns.forEach((fn) => fn());
     xBuild();
+    if (qs.get('pele') === '0') setLayer('pele', false);
     status.textContent = '';
   })
   .catch((e) => { console.error(e); status.textContent = 'Modelo anatômico não carregado: usando as formas simples.'; });
