@@ -8,7 +8,7 @@
 </head>
 <body>
 <header class="top">
-  <strong class="brand">Nursing Lab <span>3D</span></strong>
+  <button class="brand" id="brand" title="Sobre o projeto e meus projetos 3D">Nursing Lab <span>3D</span></button>
   <nav aria-label="Seções" role="tablist">
     <button role="tab" id="tab-anatomia" aria-selected="true" data-tab="anatomia">Anatomia</button>
     <button role="tab" aria-selected="false" data-tab="ausculta">Ausculta</button>
@@ -20,6 +20,28 @@
 </header>
 
 <canvas id="gl" aria-label="Paciente virtual 3D didático. Use o mouse, o toque ou as listas para explorar." tabindex="0"></canvas>
+<section id="intro" class="intro" role="dialog" aria-modal="true" aria-labelledby="intro-title" hidden>
+  <div class="intro-card">
+    <h1 id="intro-title">Nursing Lab <span>3D</span></h1>
+    <p>Laboratório virtual de enfermagem no navegador: explore o corpo humano em 3D, treine ausculta e aferição de pressão, acompanhe um monitor de sinais vitais e resolva casos clínicos.</p>
+    <p class="notice" role="note"><strong>Informativo:</strong> conteúdo didático com dados fictícios. Não substitui treinamento supervisionado, protocolo da instituição nem revisão profissional. Os sons são sintéticos e o modelo anatômico é representativo, sem validação clínica.</p>
+    <div class="tiles" id="intro-tiles">
+      <button data-go="anatomia"><b>Anatomia</b><span>Mais de 450 músculos, ossos e órgãos. Isole e veja peça por peça.</span></button>
+      <button data-go="ausculta"><b>Ausculta</b><span>Pontos cardíacos e pulmonares, com sons simulados e treino.</span></button>
+      <button data-go="pa"><b>Pressão arterial</b><span>Braçadeira, manômetro e sons de Korotkoff.</span></button>
+      <button data-go="tela"><b>Tela (monitor)</b><span>ECG, SpO2, PA e cenários clínicos ao vivo.</span></button>
+      <button data-go="quiz"><b>Avaliações</b><span>Quiz com identificação no corpo 3D.</span></button>
+      <button data-go="casos"><b>Casos clínicos</b><span>Priorize, escolha a ação e revise.</span></button>
+    </div>
+    <h2>Meus projetos 3D</h2>
+    <div class="projects">
+      <a href="https://7genesis.github.io/portfolio-3d-macbook/" target="_blank" rel="noreferrer"><b>Portfólio 3D — MacBook desmontável</b><span>Um MacBook que se desmonta na rolagem e mostra meus projetos.</span></a>
+      <a href="https://github.com/7Genesis/nursing-lab-3d" target="_blank" rel="noreferrer"><b>Nursing Lab 3D (este projeto)</b><span>Código no GitHub, com a atribuição dos modelos.</span></a>
+      <a href="https://portfolio-genesis-one.vercel.app" target="_blank" rel="noreferrer"><b>Portfólio de Genesis Melo</b><span>Todos os projetos e contato.</span></a>
+    </div>
+    <button id="intro-start" class="cta">Começar</button>
+  </div>
+</section>
 <div id="loading" class="loading">Carregando cena 3D…</div>
 <div id="fail" class="fail" hidden>Não foi possível iniciar o WebGL neste navegador. Tente outro navegador ou ative a aceleração de hardware.</div>
 

@@ -247,6 +247,16 @@ const mctx = { scene, layers, fly, view, zoomTo, highlight, setLayer, monitor, c
 const mount = (name, fn) => { mods[name] = fn(mctx, document.querySelector(`[data-panel=${name}]`)); };
 mount('ausculta', mountAusculta); mount('pa', mountPressao); mount('quiz', mountQuiz); mount('casos', mountCases);
 
+// tela de abertura: informativo e atalhos (uma vez por sessão)
+const intro = $('intro');
+const closeIntro = () => { intro.hidden = true; try { sessionStorage.setItem('nl3d.intro', '1'); } catch { /* sem armazenamento */ } canvas.focus(); };
+try { if (!sessionStorage.getItem('nl3d.intro')) intro.hidden = false; } catch { intro.hidden = false; }
+if (!intro.hidden) $('intro-start').focus();
+$('intro-start').onclick = closeIntro;
+$('intro-tiles').onclick = (e) => { const b = e.target.closest('[data-go]'); if (b) { closeIntro(); tab(b.dataset.go); } };
+addEventListener('keydown', (e) => { if (e.key === 'Escape' && !intro.hidden) closeIntro(); });
+$('brand').onclick = () => { intro.hidden = false; $('intro-start').focus(); };
+
 const status = $('atlas-status');
 loadAtlas({ layers, pickable, onStatus: (t) => { status.textContent = t; } })
   .then((a) => {

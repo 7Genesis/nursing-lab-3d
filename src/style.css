@@ -10,7 +10,7 @@ button:hover{border-color:var(--acc)}
 button[aria-pressed="true"],button[aria-selected="true"]{background:#16543d;border-color:var(--acc)}
 :focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 .top{position:fixed;z-index:3;top:0;left:0;right:0;height:56px;display:flex;align-items:center;gap:24px;padding:0 20px;background:var(--panel);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.brand{font-size:18px}.brand span{color:var(--acc)}
+.brand{font-size:18px;font-weight:700;background:none;border:0;padding:0;cursor:pointer}.brand span{color:var(--acc)}
 .top nav{display:flex;gap:8px}
 .side,.bottom{position:fixed;z-index:2;background:var(--panel);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:16px}
 .side{top:68px;right:12px;width:340px;max-height:calc(100% - 150px);overflow:auto;padding:16px}
@@ -55,3 +55,15 @@ button.wrong{background:#5a2020;border-color:#ff6b6b}
 .side h3{margin:16px 0 6px;font-size:14px;color:var(--acc);text-transform:uppercase;letter-spacing:.06em}
 #x-search{width:100%;background:#0f1a22;border:1px solid var(--line);border-radius:8px;padding:6px;margin-bottom:6px}
 #x-list{height:auto;margin-bottom:8px}
+
+.intro{position:fixed;inset:0;z-index:6;display:grid;place-items:center;padding:16px;background:rgba(6,10,14,.82);backdrop-filter:blur(10px);overflow:auto}
+.intro-card{width:min(880px,100%);max-height:100%;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:24px}
+.intro h1{margin:0 0 8px;font-size:28px}.intro h1 span{color:var(--acc)}
+.intro h2{margin:20px 0 8px;font-size:14px;color:var(--acc);text-transform:uppercase;letter-spacing:.06em}
+.intro p{margin:6px 0}
+.notice{background:#2a2410;border:1px solid #5b4a14;border-radius:12px;padding:10px 12px;color:#ffe29a}
+.tiles,.projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:12px}
+.tiles button,.projects a{display:flex;flex-direction:column;gap:4px;text-align:left;border-radius:14px;padding:12px;background:#0f1a22;border:1px solid var(--line);color:var(--ink);text-decoration:none;cursor:pointer}
+.tiles button:hover,.projects a:hover{border-color:var(--acc)}
+.tiles span,.projects span{font-size:13px;color:var(--mut)}
+.cta{margin-top:18px;background:#16543d;border-color:var(--acc);padding:10px 24px;font-weight:600}
