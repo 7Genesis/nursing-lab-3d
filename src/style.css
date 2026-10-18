@@ -28,8 +28,26 @@ input[type=range]{width:100%;accent-color:var(--acc)}
 .loading,.fail{position:fixed;z-index:4;inset:0;display:grid;place-items:center;background:var(--bg);color:var(--mut)}
 .loading.done{display:none}
 @media(max-width:760px){
-  .top{gap:10px;padding:0 10px}.brand{font-size:15px}
-  .side{top:auto;left:12px;right:12px;bottom:112px;width:auto;max-height:36%}
-  .op{margin-left:0}
+  .top{gap:10px;padding:0 10px}.brand{font-size:15px;white-space:nowrap}
+  .top nav{flex-wrap:nowrap}.top nav button{white-space:nowrap;padding:6px 12px}
+  .bottom{padding:8px 10px;gap:6px}
+  .bottom .grp{flex-wrap:nowrap;overflow-x:auto;max-width:100%;scrollbar-width:none}
+  .bottom button{padding:4px 10px;font-size:13px;white-space:nowrap}
+  .op{margin-left:0;font-size:13px}.op input{width:90px}
+  .side{top:auto;left:12px;right:12px;bottom:116px;width:auto;max-height:calc(100% - 200px);min-height:0}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.top nav{overflow-x:auto;scrollbar-width:thin}
+.side.wide{width:420px}
+.card{background:#0f1a22;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:10px 0}
+.opts{display:flex;flex-direction:column;gap:6px;margin:8px 0}
+.opts button{text-align:left;border-radius:12px}
+button.right{background:#16543d;border-color:var(--acc)}
+button.wrong{background:#5a2020;border-color:#ff6b6b}
+.src{font-size:11px;color:var(--mut);margin:10px 0 0}
+.note.ok{color:var(--acc)}
+.dial{display:flex;justify-content:center;margin:8px 0}
+.side ul{margin:6px 0;padding-left:18px}
+.side label.lbl input[type=checkbox]{width:auto;margin-right:6px}
+@media(max-width:760px){.side.wide{width:auto}}

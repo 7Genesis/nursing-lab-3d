@@ -5,6 +5,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { buildBody } from './body.js';
 import { createMonitor, SCENARIOS } from './monitor.js';
 import { STRUCTURES, SOURCES, LAYERS } from './data.js';
+import { mountAusculta } from './ausculta.js';
+import { mountPressao } from './pressao.js';
+import { mountQuiz, mountCases } from './avaliacao.js';
 
 const $ = (id) => document.getElementById(id);
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -69,15 +72,16 @@ function view(name) { const w = VIEWS[name]; fly(w.p, w.t); }
 camera.position.set(...VIEWS.anterior.p); controls.target.set(...VIEWS.anterior.t); controls.update();
 
 // camadas
-const layerBar = $('b-layers');
+const layerBar = $('b-layers'), layerBtns = {};
+function setLayer(k, on) {
+  layerBtns[k].setAttribute('aria-pressed', String(on)); layers[k].visible = on;
+  if (!on && sel && STRUCTURES[sel] && layers[k].children.some((m) => m.userData.id === sel)) select(null);
+}
 for (const [k, label] of LAYERS) {
   const b = document.createElement('button');
   b.textContent = label; b.setAttribute('aria-pressed', 'true');
-  b.onclick = () => {
-    const on = b.getAttribute('aria-pressed') !== 'true';
-    b.setAttribute('aria-pressed', String(on)); layers[k].visible = on;
-    if (!on && sel && STRUCTURES[sel] && layers[k].children.some((m) => m.userData.id === sel)) select(null);
-  };
+  b.onclick = () => setLayer(k, b.getAttribute('aria-pressed') !== 'true');
+  layerBtns[k] = b;
   layerBar.append(b);
 }
 $('b-op').oninput = (e) => layers.pele.children.forEach((m) => { m.material.opacity = e.target.value / 100; });
@@ -115,6 +119,7 @@ function zoomTo(id) {
 }
 $('s-focus').onclick = () => sel && zoomTo(sel);
 
+const clickables = new Map(), frameFns = new Set();
 const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
 let down = null;
 canvas.addEventListener('pointerdown', (e) => { down = { x: e.clientX, y: e.clientY, t: performance.now() }; });
@@ -125,18 +130,28 @@ canvas.addEventListener('pointerup', (e) => {
   ray.setFromCamera(ndc, camera);
   const sh = ray.intersectObject(screen)[0];
   const hits = ray.intersectObjects(pickable.filter((m) => m.parent.visible));
+  const ck = ray.intersectObjects([...clickables.keys()].filter((m) => m.parent.visible))[0];
+  if (ck && (!hits[0] || ck.distance < hits[0].distance + 0.05) && (!sh || ck.distance < sh.distance)) { clickables.get(ck.object)(); return; }
   if (sh && (!hits[0] || sh.distance < hits[0].distance)) { monitor.press(sh.uv.x, sh.uv.y); return; }
   const h = hits.find((x) => x.object.userData.id !== 'pele') || hits[0];
   select(h ? h.object.userData.id : null);
 });
 
 // abas
+const mods = {};
+let current = 'anatomia';
 function tab(name) {
+  mods[current]?.leave?.();
+  current = name;
   for (const b of document.querySelectorAll('[role=tab]')) b.setAttribute('aria-selected', String(b.dataset.tab === name));
   for (const p of document.querySelectorAll('[data-panel]')) p.hidden = p.dataset.panel !== name;
-  view(name === 'tela' ? 'tela' : 'anterior');
+  $('side').classList.toggle('wide', ['pa', 'quiz', 'casos'].includes(name));
+  if (mods[name]) mods[name].enter(); else view(name === 'tela' ? 'tela' : 'anterior');
 }
 document.querySelector('nav').onclick = (e) => e.target.dataset.tab && tab(e.target.dataset.tab);
+const mctx = { scene, layers, fly, view, zoomTo, highlight, setLayer, monitor, clickables, goTab: tab, onFrame: (fn) => frameFns.add(fn) };
+const mount = (name, fn) => { mods[name] = fn(mctx, document.querySelector(`[data-panel=${name}]`)); };
+mount('ausculta', mountAusculta); mount('pa', mountPressao); mount('quiz', mountQuiz); mount('casos', mountCases);
 
 // painel do monitor
 const scen = $('m-scen');
@@ -167,7 +182,9 @@ function resize() {
 addEventListener('resize', resize); resize();
 const clock = new THREE.Clock();
 renderer.setAnimationLoop(() => {
-  monitor.update(Math.min(clock.getDelta(), 0.1));
+  const dt = Math.min(clock.getDelta(), 0.1);
+  monitor.update(dt);
+  frameFns.forEach((fn) => fn(dt));
   controls.update();
   renderer.render(scene, camera);
   $('loading').classList.add('done');

@@ -11,6 +11,10 @@
   <strong class="brand">Nursing Lab <span>3D</span></strong>
   <nav aria-label="Seções" role="tablist">
     <button role="tab" id="tab-anatomia" aria-selected="true" data-tab="anatomia">Anatomia</button>
+    <button role="tab" aria-selected="false" data-tab="ausculta">Ausculta</button>
+    <button role="tab" aria-selected="false" data-tab="pa">Pressão arterial</button>
+    <button role="tab" aria-selected="false" data-tab="quiz">Avaliações</button>
+    <button role="tab" aria-selected="false" data-tab="casos">Casos</button>
     <button role="tab" id="tab-tela" aria-selected="false" data-tab="tela">Tela (monitor)</button>
   </nav>
 </header>
@@ -50,6 +54,10 @@
     <input id="m-pain" type="range" min="0" max="10" step="1" value="0">
     <p class="note">Você também pode tocar nas teclas de cenário na própria tela do monitor, no 3D. Os limites de alarme são didáticos (adulto); siga o protocolo da instituição.</p>
   </section>
+  <section data-panel="ausculta" hidden></section>
+  <section data-panel="pa" hidden></section>
+  <section data-panel="quiz" hidden></section>
+  <section data-panel="casos" hidden></section>
 </aside>
 
 <footer class="bottom">

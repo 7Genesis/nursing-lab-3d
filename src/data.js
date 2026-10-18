@@ -8,6 +8,8 @@ export const SOURCES = [
   'EPUAP/NPIAP/PPIA. Prevention and Treatment of Pressure Ulcers/Injuries: Clinical Practice Guideline, 2019.',
   'Muntner P et al. Measurement of Blood Pressure in Humans: AHA Scientific Statement. Hypertension, 2019.',
   'Potter PA, Perry AG. Fundamentos de Enfermagem (edição vigente).',
+  'Whelton PK et al. 2017 ACC/AHA Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure in Adults. Hypertension, 2018.',
+  'Bickley LS. Bates: Propedêutica Médica (edição vigente).',
 ];
 
 export const LAYERS = [
