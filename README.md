@@ -36,6 +36,10 @@ blender -b Startup.blend --python scripts/zanatomy-dump.py -- dump/
 node scripts/build-models.mjs --za dump --bp <pasta-bodyparts3d> --ta TA2.csv
 ```
 
+## Demo
+
+https://7genesis.github.io/nursing-lab-3d/ (GitHub Pages, branch `gh-pages`). Para publicar de novo: `npm run deploy`.
+
 ## Rodar
 
 ```bash
